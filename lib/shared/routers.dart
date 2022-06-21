@@ -1,5 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-
+import 'package:weather_app/injection.dart';
+import 'package:weather_app/presentations/cubit/weather_cubit.dart';
 import '../presentations/pages/page.dart';
 
 class Routers {
@@ -9,7 +11,21 @@ class Routers {
 
   List<GetPage> routers = [
     GetPage(name: splash, page: () => SplashPage()),
-    GetPage(name: form, page: () => FormPage()),
-    GetPage(name: home, page: () => HomePage()),
+    GetPage(
+        name: form,
+        page: () => BlocProvider(
+              create: (context) => locator<WeatherCubit>(),
+              child: FormPage(),
+            )),
+    GetPage(
+        name: home,
+        page: () => BlocProvider(
+              create: (context) => locator<WeatherCubit>(),
+              child: HomePage(
+                name: Get.arguments[0],
+                selectedCity: Get.arguments[1],
+                currentWeatherResponse: Get.arguments[2],
+              ),
+            )),
   ];
 }
